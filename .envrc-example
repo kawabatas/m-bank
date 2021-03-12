@@ -1,0 +1,6 @@
+export GOBIN=$PWD/bin
+export PATH=$GOBIN:$PATH
+export DB_HOST=127.0.0.1:3306
+export DB_NAME=dbname
+export DB_USER=root
+export DB_PASSWORD=root
