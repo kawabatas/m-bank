@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	_, err := setupDB(
+	db, err := setupDB(
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_USER"),
@@ -20,7 +20,8 @@ func main() {
 		log.Fatalf("setup DB error: %v", err)
 	}
 
-	server, err := newServer()
+	// create new service API
+	server, err := newServer(db)
 	if err != nil {
 		log.Fatalf("new Server error: %v", err)
 	}
@@ -28,6 +29,7 @@ func main() {
 		_ = server.Shutdown()
 	}()
 
+	// serve API
 	server.Port = 3000
 	if err := server.Serve(); err != nil {
 		log.Fatalf("serve Server error: %v", err)

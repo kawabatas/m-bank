@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 
@@ -12,7 +13,7 @@ import (
 	"github.com/kawabatas/m-bank/gen/restapi/operations/bank"
 )
 
-func newServer() (*restapi.Server, error) {
+func newServer(db *sql.DB) (*restapi.Server, error) {
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
 	if err != nil {
 		return nil, err
@@ -21,7 +22,9 @@ func newServer() (*restapi.Server, error) {
 	api := operations.NewBankAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	api.Logger = log.Printf
-	setHandler(api)
+
+	app := newApp(db)
+	setHandler(api, app)
 	server.SetAPI(api)
 
 	api.Middleware = func(middleware.Builder) http.Handler {
@@ -32,7 +35,7 @@ func newServer() (*restapi.Server, error) {
 	return server, nil
 }
 
-func setHandler(api *operations.BankAPI) {
+func setHandler(api *operations.BankAPI, app *application) {
 	// ctx := context.Background()
 	api.BankGetBalanceHandler = bank.GetBalanceHandlerFunc(func(params bank.GetBalanceParams) middleware.Responder {
 		return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
