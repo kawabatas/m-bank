@@ -57,7 +57,25 @@ func (r *PaymentTransactionRepository) Confirm(ctx context.Context, uuid string)
 		return nil, err
 	}
 
-	// TODO: 残高の加減算
+	// 残高の加減算
+	beforeBalance, err := findBalance(ctx, tx, pt.UserID)
+	if err != nil {
+		return nil, err
+	}
+	// 負の数でないことは型で担保
+	afterBalanceAmount := beforeBalance.Amount + uint(pt.Amount)
+	if _, err := tx.ExecContext(ctx,
+		`UPDATE balances SET amount = ? WHERE user_id = ?`,
+		afterBalanceAmount, pt.UserID,
+	); err != nil {
+		return nil, err
+	}
+	if _, err := r.DB.ExecContext(ctx,
+		"INSERT INTO balance_logs (user_id, before_amount, after_amount) VALUES (?, ?, ?)",
+		pt.UserID, beforeBalance.Amount, afterBalanceAmount,
+	); err != nil {
+		return nil, err
+	}
 
 	if err := tx.Commit(); err != nil {
 		return nil, err

@@ -17,8 +17,16 @@ func NewBalanceRepository(db *sql.DB) *BalanceRepository {
 }
 
 func (r *BalanceRepository) Get(ctx context.Context, userID uint) (*model.Balance, error) {
+	return findBalance(ctx, r.DB, userID)
+}
+
+func (r *BalanceRepository) AddAllUsers(ctx context.Context, amount, limit, offset int) error {
+	return nil
+}
+
+func findBalance(ctx context.Context, db dbContext, userID uint) (*model.Balance, error) {
 	query := `SELECT user_id, amount FROM balances WHERE user_id = ?`
-	rows, err := r.DB.QueryContext(ctx, query, userID)
+	rows, err := db.QueryContext(ctx, query, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -28,10 +36,6 @@ func (r *BalanceRepository) Get(ctx context.Context, userID uint) (*model.Balanc
 		return nil, domain.ErrNoSuchEntity
 	}
 	return rowsToBalance(rows)
-}
-
-func (r *BalanceRepository) AddAllUsers(ctx context.Context, amount, limit, offset int) error {
-	return nil
 }
 
 func rowsToBalance(rows *sql.Rows) (*model.Balance, error) {

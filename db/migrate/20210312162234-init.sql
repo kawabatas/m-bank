@@ -26,11 +26,12 @@ CREATE TABLE `payment_transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `balance_logs` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) UNSIGNED NOT NULL,
   `before_amount` INT(11) UNSIGNED NOT NULL,
   `after_amount` INT(11) UNSIGNED NOT NULL,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
