@@ -9,24 +9,17 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
-	"strings"
-
-	"github.com/go-openapi/swag"
 )
 
-// PayAllURL generates an URL for the pay all operation
-type PayAllURL struct {
-	Amount int32
-
+// PaymentAllURL generates an URL for the payment all operation
+type PaymentAllURL struct {
 	_basePath string
-	// avoid unkeyed usage
-	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PayAllURL) WithBasePath(bp string) *PayAllURL {
+func (o *PaymentAllURL) WithBasePath(bp string) *PaymentAllURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -34,22 +27,15 @@ func (o *PayAllURL) WithBasePath(bp string) *PayAllURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PayAllURL) SetBasePath(bp string) {
+func (o *PaymentAllURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *PayAllURL) Build() (*url.URL, error) {
+func (o *PaymentAllURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pay/all/{amount}"
-
-	amount := swag.FormatInt32(o.Amount)
-	if amount != "" {
-		_path = strings.Replace(_path, "{amount}", amount, -1)
-	} else {
-		return nil, errors.New("amount is required on PayAllURL")
-	}
+	var _path = "/payments/all"
 
 	_basePath := o._basePath
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
@@ -58,7 +44,7 @@ func (o *PayAllURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *PayAllURL) Must(u *url.URL, err error) *url.URL {
+func (o *PaymentAllURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -69,17 +55,17 @@ func (o *PayAllURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *PayAllURL) String() string {
+func (o *PaymentAllURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *PayAllURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *PaymentAllURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on PayAllURL")
+		return nil, errors.New("scheme is required for a full url on PaymentAllURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on PayAllURL")
+		return nil, errors.New("host is required for a full url on PaymentAllURL")
 	}
 
 	base, err := o.Build()
@@ -93,6 +79,6 @@ func (o *PayAllURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *PayAllURL) StringFull(scheme, host string) string {
+func (o *PaymentAllURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

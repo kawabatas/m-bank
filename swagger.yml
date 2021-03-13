@@ -32,11 +32,11 @@ paths:
           format: int32
       tags:
         - Bank
-  /pay/try:
+  /payments/try:
     post:
-      summary: PayTry
+      summary: PaymentTry
       description: 支払い（ユーザの残高の加減算）をTryする
-      operationId: PayTry
+      operationId: PaymentTry
       responses:
         "200":
           description: A successful response.
@@ -54,11 +54,11 @@ paths:
             $ref: "#/definitions/payRequest"
       tags:
         - Bank
-  /pay/confirm:
+  /payments/confirm:
     post:
-      summary: PayConfirm
+      summary: PaymentConfirm
       description: 支払い（ユーザの残高の加減算）をConfirmする
-      operationId: PayConfirm
+      operationId: PaymentConfirm
       responses:
         "200":
           description: A successful response.
@@ -76,11 +76,11 @@ paths:
             $ref: "#/definitions/payRequest"
       tags:
         - Bank
-  /pay/cancel:
+  /payments/cancel:
     post:
-      summary: PayCancel
+      summary: PaymentCancel
       description: 支払い（ユーザの残高の加減算）をCancelする
-      operationId: PayCancel
+      operationId: PaymentCancel
       responses:
         "200":
           description: A successful response.
@@ -98,11 +98,11 @@ paths:
             $ref: "#/definitions/payRequest"
       tags:
         - Bank
-  "/pay/all/{amount}":
-    get:
-      summary: PayAll
-      description: 全てのユーザの残高に一斉に加算する
-      operationId: PayAll
+  /payments/all:
+    post:
+      summary: PaymentAll
+      description: （limit,offsetを指定して）ユーザの残高に一斉に加算する
+      operationId: PaymentAll
       responses:
         "200":
           description: A successful response.
@@ -111,11 +111,11 @@ paths:
           schema:
             $ref: "#/definitions/errorResponse"
       parameters:
-        - name: amount
-          in: path
+        - name: body
+          in: body
           required: true
-          type: integer
-          format: int32
+          schema:
+            $ref: "#/definitions/payAllRequest"
       tags:
         - Bank
 definitions:
@@ -160,6 +160,20 @@ definitions:
         format: date-time
       balance:
         $ref: "#/definitions/balance"
+  payAllRequest:
+    type: object
+    properties:
+      amount:
+        type: integer
+        format: int32
+      limit:
+        type: integer
+        format: int32
+      offset:
+        type: integer
+        format: int32
+    required:
+      - amount
   errorResponse:
     type: object
     properties:

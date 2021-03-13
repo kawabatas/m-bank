@@ -17,7 +17,4 @@ make create
 
 # サーバ起動
 make serve
-
-# テスト
-make test
 ```

@@ -64,21 +64,22 @@ func init() {
         }
       }
     },
-    "/pay/all/{amount}": {
-      "get": {
-        "description": "全てのユーザの残高に一斉に加算する",
+    "/payments/all": {
+      "post": {
+        "description": "（limit,offsetを指定して）ユーザの残高に一斉に加算する",
         "tags": [
           "Bank"
         ],
-        "summary": "PayAll",
-        "operationId": "PayAll",
+        "summary": "PaymentAll",
+        "operationId": "PaymentAll",
         "parameters": [
           {
-            "type": "integer",
-            "format": "int32",
-            "name": "amount",
-            "in": "path",
-            "required": true
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/payAllRequest"
+            }
           }
         ],
         "responses": {
@@ -94,14 +95,14 @@ func init() {
         }
       }
     },
-    "/pay/cancel": {
+    "/payments/cancel": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をCancelする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayCancel",
-        "operationId": "PayCancel",
+        "summary": "PaymentCancel",
+        "operationId": "PaymentCancel",
         "parameters": [
           {
             "name": "body",
@@ -128,14 +129,14 @@ func init() {
         }
       }
     },
-    "/pay/confirm": {
+    "/payments/confirm": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をConfirmする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayConfirm",
-        "operationId": "PayConfirm",
+        "summary": "PaymentConfirm",
+        "operationId": "PaymentConfirm",
         "parameters": [
           {
             "name": "body",
@@ -162,14 +163,14 @@ func init() {
         }
       }
     },
-    "/pay/try": {
+    "/payments/try": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をTryする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayTry",
-        "operationId": "PayTry",
+        "summary": "PaymentTry",
+        "operationId": "PaymentTry",
         "parameters": [
           {
             "name": "body",
@@ -222,6 +223,26 @@ func init() {
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "payAllRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -324,21 +345,22 @@ func init() {
         }
       }
     },
-    "/pay/all/{amount}": {
-      "get": {
-        "description": "全てのユーザの残高に一斉に加算する",
+    "/payments/all": {
+      "post": {
+        "description": "（limit,offsetを指定して）ユーザの残高に一斉に加算する",
         "tags": [
           "Bank"
         ],
-        "summary": "PayAll",
-        "operationId": "PayAll",
+        "summary": "PaymentAll",
+        "operationId": "PaymentAll",
         "parameters": [
           {
-            "type": "integer",
-            "format": "int32",
-            "name": "amount",
-            "in": "path",
-            "required": true
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/payAllRequest"
+            }
           }
         ],
         "responses": {
@@ -354,14 +376,14 @@ func init() {
         }
       }
     },
-    "/pay/cancel": {
+    "/payments/cancel": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をCancelする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayCancel",
-        "operationId": "PayCancel",
+        "summary": "PaymentCancel",
+        "operationId": "PaymentCancel",
         "parameters": [
           {
             "name": "body",
@@ -388,14 +410,14 @@ func init() {
         }
       }
     },
-    "/pay/confirm": {
+    "/payments/confirm": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をConfirmする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayConfirm",
-        "operationId": "PayConfirm",
+        "summary": "PaymentConfirm",
+        "operationId": "PaymentConfirm",
         "parameters": [
           {
             "name": "body",
@@ -422,14 +444,14 @@ func init() {
         }
       }
     },
-    "/pay/try": {
+    "/payments/try": {
       "post": {
         "description": "支払い（ユーザの残高の加減算）をTryする",
         "tags": [
           "Bank"
         ],
-        "summary": "PayTry",
-        "operationId": "PayTry",
+        "summary": "PaymentTry",
+        "operationId": "PaymentTry",
         "parameters": [
           {
             "name": "body",
@@ -482,6 +504,26 @@ func init() {
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "payAllRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

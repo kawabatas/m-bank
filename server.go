@@ -41,17 +41,17 @@ func setHandler(api *operations.BankAPI, app *application) {
 		return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
 	})
 
-	api.BankPayTryHandler = bank.PayTryHandlerFunc(func(params bank.PayTryParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PayTry has not yet been implemented")
+	api.BankPaymentTryHandler = bank.PaymentTryHandlerFunc(func(params bank.PaymentTryParams) middleware.Responder {
+		return middleware.NotImplemented("operation bank.PaymentTry has not yet been implemented")
 	})
-	api.BankPayConfirmHandler = bank.PayConfirmHandlerFunc(func(params bank.PayConfirmParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PayConfirm has not yet been implemented")
+	api.BankPaymentConfirmHandler = bank.PaymentConfirmHandlerFunc(func(params bank.PaymentConfirmParams) middleware.Responder {
+		return middleware.NotImplemented("operation bank.PaymentConfirm has not yet been implemented")
 	})
-	api.BankPayCancelHandler = bank.PayCancelHandlerFunc(func(params bank.PayCancelParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PayCancel has not yet been implemented")
+	api.BankPaymentCancelHandler = bank.PaymentCancelHandlerFunc(func(params bank.PaymentCancelParams) middleware.Responder {
+		return middleware.NotImplemented("operation bank.PaymentCancel has not yet been implemented")
 	})
 
-	api.BankPayAllHandler = bank.PayAllHandlerFunc(func(params bank.PayAllParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PayAll has not yet been implemented")
+	api.BankPaymentAllHandler = bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
+		return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
 	})
 }

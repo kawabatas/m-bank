@@ -11,15 +11,15 @@ import (
 	golangswaggerpaths "path"
 )
 
-// PayCancelURL generates an URL for the pay cancel operation
-type PayCancelURL struct {
+// PaymentTryURL generates an URL for the payment try operation
+type PaymentTryURL struct {
 	_basePath string
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PayCancelURL) WithBasePath(bp string) *PayCancelURL {
+func (o *PaymentTryURL) WithBasePath(bp string) *PaymentTryURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -27,15 +27,15 @@ func (o *PayCancelURL) WithBasePath(bp string) *PayCancelURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PayCancelURL) SetBasePath(bp string) {
+func (o *PaymentTryURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *PayCancelURL) Build() (*url.URL, error) {
+func (o *PaymentTryURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/pay/cancel"
+	var _path = "/payments/try"
 
 	_basePath := o._basePath
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
@@ -44,7 +44,7 @@ func (o *PayCancelURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *PayCancelURL) Must(u *url.URL, err error) *url.URL {
+func (o *PaymentTryURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -55,17 +55,17 @@ func (o *PayCancelURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *PayCancelURL) String() string {
+func (o *PaymentTryURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *PayCancelURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *PaymentTryURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on PayCancelURL")
+		return nil, errors.New("scheme is required for a full url on PaymentTryURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on PayCancelURL")
+		return nil, errors.New("host is required for a full url on PaymentTryURL")
 	}
 
 	base, err := o.Build()
@@ -79,6 +79,6 @@ func (o *PayCancelURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *PayCancelURL) StringFull(scheme, host string) string {
+func (o *PaymentTryURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

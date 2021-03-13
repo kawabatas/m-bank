@@ -14,24 +14,11 @@ type PaymentTransaction struct {
 	CancelTime  *time.Time
 }
 
-func NewPaymentTransaction(uuid string) *PaymentTransaction {
+func NewPaymentTransaction(uuid string, userID uint, amount int) *PaymentTransaction {
 	return &PaymentTransaction{
 		UUID:       uuid,
+		UserID:     userID,
+		Amount:     amount,
 		CreateTime: time.Now(),
 	}
-}
-
-func (t *PaymentTransaction) Try() {
-	now := time.Now()
-	t.TryTime = &now
-}
-
-func (t *PaymentTransaction) Confirm() {
-	now := time.Now()
-	t.ConfirmTime = &now
-}
-
-func (t *PaymentTransaction) Cancel() {
-	now := time.Now()
-	t.CancelTime = &now
 }

@@ -16,18 +16,18 @@ import (
 	"github.com/kawabatas/m-bank/gen/models"
 )
 
-// NewPayCancelParams creates a new PayCancelParams object
+// NewPaymentCancelParams creates a new PaymentCancelParams object
 // no default values defined in spec.
-func NewPayCancelParams() PayCancelParams {
+func NewPaymentCancelParams() PaymentCancelParams {
 
-	return PayCancelParams{}
+	return PaymentCancelParams{}
 }
 
-// PayCancelParams contains all the bound params for the pay cancel operation
+// PaymentCancelParams contains all the bound params for the payment cancel operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PayCancel
-type PayCancelParams struct {
+// swagger:parameters PaymentCancel
+type PaymentCancelParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -42,8 +42,8 @@ type PayCancelParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewPayCancelParams() beforehand.
-func (o *PayCancelParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewPaymentCancelParams() beforehand.
+func (o *PaymentCancelParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r

@@ -19,6 +19,14 @@ func (r *PaymentTransactionRepository) Find(ctx context.Context, UUID string) (*
 	return nil, nil
 }
 
-func (r *PaymentTransactionRepository) Store(ctx context.Context, transaction *model.PaymentTransaction) (*model.PaymentTransaction, error) {
+func (r *PaymentTransactionRepository) Try(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
+	return nil, nil
+}
+
+func (r *PaymentTransactionRepository) Confirm(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
+	return nil, nil
+}
+
+func (r *PaymentTransactionRepository) Cancel(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
 	return nil, nil
 }

@@ -47,17 +47,17 @@ func NewBankAPI(spec *loads.Document) *BankAPI {
 		BankGetBalanceHandler: bank.GetBalanceHandlerFunc(func(params bank.GetBalanceParams) middleware.Responder {
 			return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
 		}),
-		BankPayAllHandler: bank.PayAllHandlerFunc(func(params bank.PayAllParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayAll has not yet been implemented")
+		BankPaymentAllHandler: bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
 		}),
-		BankPayCancelHandler: bank.PayCancelHandlerFunc(func(params bank.PayCancelParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayCancel has not yet been implemented")
+		BankPaymentCancelHandler: bank.PaymentCancelHandlerFunc(func(params bank.PaymentCancelParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentCancel has not yet been implemented")
 		}),
-		BankPayConfirmHandler: bank.PayConfirmHandlerFunc(func(params bank.PayConfirmParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayConfirm has not yet been implemented")
+		BankPaymentConfirmHandler: bank.PaymentConfirmHandlerFunc(func(params bank.PaymentConfirmParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentConfirm has not yet been implemented")
 		}),
-		BankPayTryHandler: bank.PayTryHandlerFunc(func(params bank.PayTryParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayTry has not yet been implemented")
+		BankPaymentTryHandler: bank.PaymentTryHandlerFunc(func(params bank.PaymentTryParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentTry has not yet been implemented")
 		}),
 	}
 }
@@ -95,14 +95,14 @@ type BankAPI struct {
 
 	// BankGetBalanceHandler sets the operation handler for the get balance operation
 	BankGetBalanceHandler bank.GetBalanceHandler
-	// BankPayAllHandler sets the operation handler for the pay all operation
-	BankPayAllHandler bank.PayAllHandler
-	// BankPayCancelHandler sets the operation handler for the pay cancel operation
-	BankPayCancelHandler bank.PayCancelHandler
-	// BankPayConfirmHandler sets the operation handler for the pay confirm operation
-	BankPayConfirmHandler bank.PayConfirmHandler
-	// BankPayTryHandler sets the operation handler for the pay try operation
-	BankPayTryHandler bank.PayTryHandler
+	// BankPaymentAllHandler sets the operation handler for the payment all operation
+	BankPaymentAllHandler bank.PaymentAllHandler
+	// BankPaymentCancelHandler sets the operation handler for the payment cancel operation
+	BankPaymentCancelHandler bank.PaymentCancelHandler
+	// BankPaymentConfirmHandler sets the operation handler for the payment confirm operation
+	BankPaymentConfirmHandler bank.PaymentConfirmHandler
+	// BankPaymentTryHandler sets the operation handler for the payment try operation
+	BankPaymentTryHandler bank.PaymentTryHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -182,17 +182,17 @@ func (o *BankAPI) Validate() error {
 	if o.BankGetBalanceHandler == nil {
 		unregistered = append(unregistered, "bank.GetBalanceHandler")
 	}
-	if o.BankPayAllHandler == nil {
-		unregistered = append(unregistered, "bank.PayAllHandler")
+	if o.BankPaymentAllHandler == nil {
+		unregistered = append(unregistered, "bank.PaymentAllHandler")
 	}
-	if o.BankPayCancelHandler == nil {
-		unregistered = append(unregistered, "bank.PayCancelHandler")
+	if o.BankPaymentCancelHandler == nil {
+		unregistered = append(unregistered, "bank.PaymentCancelHandler")
 	}
-	if o.BankPayConfirmHandler == nil {
-		unregistered = append(unregistered, "bank.PayConfirmHandler")
+	if o.BankPaymentConfirmHandler == nil {
+		unregistered = append(unregistered, "bank.PaymentConfirmHandler")
 	}
-	if o.BankPayTryHandler == nil {
-		unregistered = append(unregistered, "bank.PayTryHandler")
+	if o.BankPaymentTryHandler == nil {
+		unregistered = append(unregistered, "bank.PaymentTryHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -286,22 +286,22 @@ func (o *BankAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/balances/{userId}"] = bank.NewGetBalance(o.context, o.BankGetBalanceHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/pay/all/{amount}"] = bank.NewPayAll(o.context, o.BankPayAllHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/pay/cancel"] = bank.NewPayCancel(o.context, o.BankPayCancelHandler)
+	o.handlers["POST"]["/payments/all"] = bank.NewPaymentAll(o.context, o.BankPaymentAllHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/pay/confirm"] = bank.NewPayConfirm(o.context, o.BankPayConfirmHandler)
+	o.handlers["POST"]["/payments/cancel"] = bank.NewPaymentCancel(o.context, o.BankPaymentCancelHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/pay/try"] = bank.NewPayTry(o.context, o.BankPayTryHandler)
+	o.handlers["POST"]["/payments/confirm"] = bank.NewPaymentConfirm(o.context, o.BankPaymentConfirmHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/payments/try"] = bank.NewPaymentTry(o.context, o.BankPaymentTryHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

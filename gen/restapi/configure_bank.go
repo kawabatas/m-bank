@@ -43,24 +43,24 @@ func configureAPI(api *operations.BankAPI) http.Handler {
 			return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
 		})
 	}
-	if api.BankPayAllHandler == nil {
-		api.BankPayAllHandler = bank.PayAllHandlerFunc(func(params bank.PayAllParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayAll has not yet been implemented")
+	if api.BankPaymentAllHandler == nil {
+		api.BankPaymentAllHandler = bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
 		})
 	}
-	if api.BankPayCancelHandler == nil {
-		api.BankPayCancelHandler = bank.PayCancelHandlerFunc(func(params bank.PayCancelParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayCancel has not yet been implemented")
+	if api.BankPaymentCancelHandler == nil {
+		api.BankPaymentCancelHandler = bank.PaymentCancelHandlerFunc(func(params bank.PaymentCancelParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentCancel has not yet been implemented")
 		})
 	}
-	if api.BankPayConfirmHandler == nil {
-		api.BankPayConfirmHandler = bank.PayConfirmHandlerFunc(func(params bank.PayConfirmParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayConfirm has not yet been implemented")
+	if api.BankPaymentConfirmHandler == nil {
+		api.BankPaymentConfirmHandler = bank.PaymentConfirmHandlerFunc(func(params bank.PaymentConfirmParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentConfirm has not yet been implemented")
 		})
 	}
-	if api.BankPayTryHandler == nil {
-		api.BankPayTryHandler = bank.PayTryHandlerFunc(func(params bank.PayTryParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PayTry has not yet been implemented")
+	if api.BankPaymentTryHandler == nil {
+		api.BankPaymentTryHandler = bank.PaymentTryHandlerFunc(func(params bank.PaymentTryParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentTry has not yet been implemented")
 		})
 	}
 
