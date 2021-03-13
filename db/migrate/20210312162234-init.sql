@@ -5,10 +5,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `users` (`name`) VALUES
-('user1'),
-('user2');
-
 CREATE TABLE `balances` (
   `user_id` INT(11) UNSIGNED NOT NULL,
   `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
@@ -37,6 +33,9 @@ CREATE TABLE `balance_logs` (
   PRIMARY KEY (`user_id`),
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `users` (`id`, `name`) VALUES (1, 'user1'), (2, 'user2');
+INSERT INTO `balances` (`user_id`, `amount`) VALUES (1, 100), (2, 200);
 
 -- +migrate Down
 DROP TABLE IF EXISTS `balance_logs`;

@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/kawabatas/m-bank/domain/model"
+	"github.com/kawabatas/m-bank/gen/models"
 	"github.com/kawabatas/m-bank/gen/restapi"
 	"github.com/kawabatas/m-bank/gen/restapi/operations"
 	"github.com/kawabatas/m-bank/gen/restapi/operations/bank"
@@ -36,22 +40,59 @@ func newServer(db *sql.DB) (*restapi.Server, error) {
 }
 
 func setHandler(api *operations.BankAPI, app *application) {
-	// ctx := context.Background()
+	ctx := context.Background()
 	api.BankGetBalanceHandler = bank.GetBalanceHandlerFunc(func(params bank.GetBalanceParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
+		balance, err := app.BalanceService.Get(ctx, uint(params.UserID))
+		if err != nil {
+			return bank.NewGetBalanceDefault(500).WithPayload(toErrorResponse(500, err.Error()))
+		}
+		return bank.NewGetBalanceOK().WithPayload(&models.Balance{UserID: int32(balance.UserID), Amount: int32(balance.Amount)})
 	})
 
 	api.BankPaymentTryHandler = bank.PaymentTryHandlerFunc(func(params bank.PaymentTryParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PaymentTry has not yet been implemented")
+		pt, balance, err := app.PaymentService.Try(ctx, *params.Body.IdempotencyKey, uint(*params.Body.UserID), int(params.Body.Amount))
+		if err != nil {
+			return bank.NewPaymentTryDefault(500).WithPayload(toErrorResponse(500, err.Error()))
+		}
+		return bank.NewPaymentTryOK().WithPayload(toPayResponse(pt, balance))
 	})
 	api.BankPaymentConfirmHandler = bank.PaymentConfirmHandlerFunc(func(params bank.PaymentConfirmParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PaymentConfirm has not yet been implemented")
+		pt, balance, err := app.PaymentService.Confirm(ctx, *params.Body.IdempotencyKey, uint(*params.Body.UserID), int(params.Body.Amount))
+		if err != nil {
+			return bank.NewPaymentConfirmDefault(500).WithPayload(toErrorResponse(500, err.Error()))
+		}
+		return bank.NewPaymentConfirmOK().WithPayload(toPayResponse(pt, balance))
 	})
 	api.BankPaymentCancelHandler = bank.PaymentCancelHandlerFunc(func(params bank.PaymentCancelParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PaymentCancel has not yet been implemented")
+		pt, balance, err := app.PaymentService.Cancel(ctx, *params.Body.IdempotencyKey, uint(*params.Body.UserID), int(params.Body.Amount))
+		if err != nil {
+			return bank.NewPaymentCancelDefault(500).WithPayload(toErrorResponse(500, err.Error()))
+		}
+		return bank.NewPaymentCancelOK().WithPayload(toPayResponse(pt, balance))
 	})
 
 	api.BankPaymentAllHandler = bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
 		return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
 	})
+}
+
+func toPayResponse(pt *model.PaymentTransaction, balance *model.Balance) *models.PayResponse {
+	return &models.PayResponse{
+		IdempotencyKey: pt.UUID,
+		TryTime:        strfmt.DateTime(pt.TryTime),
+		ConfirmTime:    strfmt.DateTime(pt.ConfirmTime),
+		CancelTime:     strfmt.DateTime(pt.CancelTime),
+		Balance: &models.Balance{
+			UserID: int32(balance.UserID),
+			Amount: int32(balance.Amount),
+		},
+	}
+}
+
+func toErrorResponse(c int, m string) *models.ErrorResponse {
+	code := int32(c)
+	return &models.ErrorResponse{
+		Code:    code,
+		Message: m,
+	}
 }

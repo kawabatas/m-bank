@@ -19,6 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("setup DB error: %v", err)
 	}
+	defer db.Close()
 
 	// create new service API
 	server, err := newServer(db)

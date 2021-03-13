@@ -3,7 +3,10 @@ package database
 import (
 	"context"
 	"database/sql"
+	"time"
 
+	"github.com/go-sql-driver/mysql"
+	"github.com/kawabatas/m-bank/domain"
 	"github.com/kawabatas/m-bank/domain/model"
 )
 
@@ -15,18 +18,115 @@ func NewPaymentTransactionRepository(db *sql.DB) *PaymentTransactionRepository {
 	return &PaymentTransactionRepository{DB: db}
 }
 
-func (r *PaymentTransactionRepository) Find(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
-	return nil, nil
+func (r *PaymentTransactionRepository) Get(ctx context.Context, uuid string) (*model.PaymentTransaction, error) {
+	return findPaymentTransaction(ctx, r.DB, uuid, false)
 }
 
-func (r *PaymentTransactionRepository) Try(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
-	return nil, nil
+func (r *PaymentTransactionRepository) Try(ctx context.Context, uuid string, userID uint, amount int) (*model.PaymentTransaction, error) {
+	pt := model.NewPaymentTransaction(uuid, userID, amount)
+	if _, err := r.DB.ExecContext(ctx,
+		"INSERT INTO payment_transactions (uuid, user_id, amount, try_time) VALUES (?, ?, ?, ?)",
+		pt.UUID, pt.UserID, pt.Amount, pt.TryTime,
+	); err != nil {
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			return nil, domain.ErrDuplicateEntity
+		}
+		return nil, err
+	}
+	return findPaymentTransaction(ctx, r.DB, uuid, false)
 }
 
-func (r *PaymentTransactionRepository) Confirm(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
-	return nil, nil
+func (r *PaymentTransactionRepository) Confirm(ctx context.Context, uuid string) (*model.PaymentTransaction, error) {
+	tx, err := r.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
+	pt, err := findPaymentTransaction(ctx, tx, uuid, true)
+	if err != nil {
+		return nil, err
+	}
+	pt.ConfirmTime = time.Now()
+	if _, err := tx.ExecContext(ctx,
+		`UPDATE payment_transactions SET confirm_time = ? WHERE uuid = ?`,
+		pt.ConfirmTime, pt.UUID,
+	); err != nil {
+		return nil, err
+	}
+
+	// TODO: 残高の加減算
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	// 再取得
+	return findPaymentTransaction(ctx, r.DB, uuid, false)
 }
 
-func (r *PaymentTransactionRepository) Cancel(ctx context.Context, UUID string) (*model.PaymentTransaction, error) {
-	return nil, nil
+func (r *PaymentTransactionRepository) Cancel(ctx context.Context, uuid string) (*model.PaymentTransaction, error) {
+	tx, err := r.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
+	pt, err := findPaymentTransaction(ctx, tx, uuid, true)
+	if err != nil {
+		return nil, err
+	}
+	pt.CancelTime = time.Now()
+	if _, err := tx.ExecContext(ctx,
+		`UPDATE payment_transactions SET cancel_time = ? WHERE uuid = ?`,
+		pt.CancelTime, pt.UUID,
+	); err != nil {
+		return nil, err
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	// 再取得
+	return findPaymentTransaction(ctx, r.DB, uuid, false)
+}
+
+func findPaymentTransaction(ctx context.Context, db dbContext, uuid string, withLock bool) (*model.PaymentTransaction, error) {
+	query := `
+	SELECT
+		uuid, user_id, amount,
+		try_time, confirm_time, cancel_time
+	FROM payment_transactions WHERE uuid = ?`
+	if withLock {
+		query = query + ` FOR UPDATE`
+	}
+	rows, err := db.QueryContext(ctx, query, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		return nil, domain.ErrNoSuchEntity
+	}
+	return rowsToPaymentTransaction(rows)
+}
+
+func rowsToPaymentTransaction(rows *sql.Rows) (*model.PaymentTransaction, error) {
+	pt := &model.PaymentTransaction{}
+	var confirmTime, cancelTime sql.NullTime
+	if err := rows.Scan(&pt.UUID, &pt.UserID, &pt.Amount, &pt.TryTime, &confirmTime, &cancelTime); err != nil {
+		return nil, err
+	}
+	if confirmTime.Valid {
+		pt.ConfirmTime = confirmTime.Time
+	}
+	if cancelTime.Valid {
+		pt.CancelTime = cancelTime.Time
+	}
+	return pt, nil
 }
