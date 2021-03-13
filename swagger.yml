@@ -1,0 +1,172 @@
+swagger: "2.0"
+info:
+  title: m-bank
+  version: version not set
+  description: This is the API for m-bank.
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Bank
+paths:
+  "/balances/{userId}":
+    get:
+      summary: GetBalance
+      description: ユーザの残高を取得
+      operationId: GetBalance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/balance"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Bank
+  /pay/try:
+    post:
+      summary: PayTry
+      description: 支払い（ユーザの残高の加減算）をTryする
+      operationId: PayTry
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  /pay/confirm:
+    post:
+      summary: PayConfirm
+      description: 支払い（ユーザの残高の加減算）をConfirmする
+      operationId: PayConfirm
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  /pay/cancel:
+    post:
+      summary: PayCancel
+      description: 支払い（ユーザの残高の加減算）をCancelする
+      operationId: PayCancel
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  "/pay/all/{amount}":
+    get:
+      summary: PayAll
+      description: 全てのユーザの残高に一斉に加算する
+      operationId: PayAll
+      responses:
+        "200":
+          description: A successful response.
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: amount
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Bank
+definitions:
+  balance:
+    type: object
+    properties:
+      user_id:
+        type: integer
+        format: int32
+      amount:
+        type: integer
+        format: int32
+  payRequest:
+    type: object
+    properties:
+      idempotency_key:
+        type: string
+        title: 冪等性キー
+      user_id:
+        type: integer
+        format: int32
+      amount:
+        type: integer
+        format: int32
+    required:
+      - idempotency_key
+      - user_id
+  payResponse:
+    type: object
+    properties:
+      idempotency_key:
+        type: string
+        title: 冪等性キー
+      try_time:
+        type: string
+        format: date-time
+      confirm_time:
+        type: string
+        format: date-time
+      cancel_time:
+        type: string
+        format: date-time
+      balance:
+        $ref: "#/definitions/balance"
+  errorResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        minimum: 100
+        maximum: 600
+      message:
+        type: string
