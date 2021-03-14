@@ -59,6 +59,16 @@ curl --request POST \
   "user_id":1,
   "amount":100
 }'
+
+# ユーザの残高へ一斉に加算
+curl --request POST \
+  --url http://127.0.0.1:3000/payments/add_to_users \
+  --header 'content-type: application/json' \
+  --data '{
+  "amount":100,
+  "limit": 10,
+  "offset": 0
+}'
 ```
 
 ## 説明

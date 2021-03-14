@@ -8,4 +8,5 @@ var (
 	ErrNoSuchEntity    = errors.New("no such entity")
 	ErrInvalidUUID     = errors.New("invalid uuid")
 	ErrShortBalance    = errors.New("short balance")
+	ErrInvalidParam    = errors.New("invalid param")
 )

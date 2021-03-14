@@ -117,6 +117,13 @@ func (s *paymentService) Cancel(ctx context.Context, uuid string, userID uint, a
 	return pt, balance, nil
 }
 
+func (s *paymentService) AddToUsers(ctx context.Context, amount, limit, offset int) error {
+	if amount <= 0 {
+		return domain.ErrInvalidParam
+	}
+	return s.BalanceRepo.AddToUsers(ctx, amount, limit, offset)
+}
+
 // 残高が十分かどうか
 func (s *paymentService) isEnoughBalance(ctx context.Context, userID uint, amount int) (bool, error) {
 	// 加算の時は考慮しない

@@ -73,7 +73,10 @@ func setHandler(api *operations.BankAPI, app *application) {
 	})
 
 	api.BankPaymentAddToUsersHandler = bank.PaymentAddToUsersHandlerFunc(func(params bank.PaymentAddToUsersParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PaymentAddToUsers has not yet been implemented")
+		if err := app.PaymentService.AddToUsers(ctx, int(*params.Body.Amount), int(params.Body.Limit), int(params.Body.Offset)); err != nil {
+			return bank.NewPaymentAddToUsersDefault(500).WithPayload(toErrorResponse(500, err.Error()))
+		}
+		return bank.NewPaymentAddToUsersOK()
 	})
 }
 
