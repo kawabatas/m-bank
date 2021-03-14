@@ -47,7 +47,15 @@ func (s *balanceService) Get(ctx context.Context, userID uint) (*model.Balance, 
 }
 
 func (s *paymentService) Try(ctx context.Context, uuid string, userID uint, amount int) (*model.PaymentTransaction, *model.Balance, error) {
-	// TODO: 残高が足りるかチェック
+	// 残高が足りるかチェック
+	ok, err := s.isEnoughBalance(ctx, userID, amount)
+	if err != nil {
+		return nil, nil, err
+	}
+	if !ok {
+		return nil, nil, domain.ErrShortBalance
+	}
+
 	pt, err := s.PaymentRepo.Try(ctx, uuid, userID, amount)
 	if err != nil {
 		return nil, nil, err
@@ -61,7 +69,15 @@ func (s *paymentService) Try(ctx context.Context, uuid string, userID uint, amou
 }
 
 func (s *paymentService) Confirm(ctx context.Context, uuid string, userID uint, amount int) (*model.PaymentTransaction, *model.Balance, error) {
-	// TODO: 残高が足りるかチェック
+	// 残高が足りるかチェック
+	ok, err := s.isEnoughBalance(ctx, userID, amount)
+	if err != nil {
+		return nil, nil, err
+	}
+	if !ok {
+		return nil, nil, domain.ErrShortBalance
+	}
+
 	pt, err := s.PaymentRepo.Get(ctx, uuid)
 	if err != nil {
 		return nil, nil, err
@@ -99,4 +115,22 @@ func (s *paymentService) Cancel(ctx context.Context, uuid string, userID uint, a
 		return nil, nil, err
 	}
 	return pt, balance, nil
+}
+
+// 残高が十分かどうか
+func (s *paymentService) isEnoughBalance(ctx context.Context, userID uint, amount int) (bool, error) {
+	// 加算の時は考慮しない
+	if amount >= 0 {
+		return true, nil
+	}
+
+	balance, err := s.BalanceRepo.Get(ctx, userID)
+	if err != nil {
+		return false, err
+	}
+	// 減算後の値が正かどうか
+	if balance.Amount+uint(amount) > 0 {
+		return true, nil
+	}
+	return false, nil
 }
