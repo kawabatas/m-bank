@@ -15,10 +15,10 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// PayAllRequest pay all request
+// PayAddToUsersRequest pay add to users request
 //
-// swagger:model payAllRequest
-type PayAllRequest struct {
+// swagger:model payAddToUsersRequest
+type PayAddToUsersRequest struct {
 
 	// amount
 	// Required: true
@@ -32,7 +32,7 @@ type PayAllRequest struct {
 }
 
 // UnmarshalJSON unmarshals this object while disallowing additional properties from JSON
-func (m *PayAllRequest) UnmarshalJSON(data []byte) error {
+func (m *PayAddToUsersRequest) UnmarshalJSON(data []byte) error {
 	var props struct {
 
 		// amount
@@ -58,8 +58,8 @@ func (m *PayAllRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Validate validates this pay all request
-func (m *PayAllRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this pay add to users request
+func (m *PayAddToUsersRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAmount(formats); err != nil {
@@ -72,7 +72,7 @@ func (m *PayAllRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PayAllRequest) validateAmount(formats strfmt.Registry) error {
+func (m *PayAddToUsersRequest) validateAmount(formats strfmt.Registry) error {
 
 	if err := validate.Required("amount", "body", m.Amount); err != nil {
 		return err
@@ -82,7 +82,7 @@ func (m *PayAllRequest) validateAmount(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *PayAllRequest) MarshalBinary() ([]byte, error) {
+func (m *PayAddToUsersRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -90,8 +90,8 @@ func (m *PayAllRequest) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *PayAllRequest) UnmarshalBinary(b []byte) error {
-	var res PayAllRequest
+func (m *PayAddToUsersRequest) UnmarshalBinary(b []byte) error {
+	var res PayAddToUsersRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

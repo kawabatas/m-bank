@@ -16,18 +16,18 @@ import (
 	"github.com/kawabatas/m-bank/gen/models"
 )
 
-// NewPaymentAllParams creates a new PaymentAllParams object
+// NewPaymentAddToUsersParams creates a new PaymentAddToUsersParams object
 // no default values defined in spec.
-func NewPaymentAllParams() PaymentAllParams {
+func NewPaymentAddToUsersParams() PaymentAddToUsersParams {
 
-	return PaymentAllParams{}
+	return PaymentAddToUsersParams{}
 }
 
-// PaymentAllParams contains all the bound params for the payment all operation
+// PaymentAddToUsersParams contains all the bound params for the payment add to users operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PaymentAll
-type PaymentAllParams struct {
+// swagger:parameters PaymentAddToUsers
+type PaymentAddToUsersParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -36,21 +36,21 @@ type PaymentAllParams struct {
 	  Required: true
 	  In: body
 	*/
-	Body *models.PayAllRequest
+	Body *models.PayAddToUsersRequest
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewPaymentAllParams() beforehand.
-func (o *PaymentAllParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewPaymentAddToUsersParams() beforehand.
+func (o *PaymentAddToUsersParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.PayAllRequest
+		var body models.PayAddToUsersRequest
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("body", "body", ""))

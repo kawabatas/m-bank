@@ -43,9 +43,9 @@ func configureAPI(api *operations.BankAPI) http.Handler {
 			return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
 		})
 	}
-	if api.BankPaymentAllHandler == nil {
-		api.BankPaymentAllHandler = bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
+	if api.BankPaymentAddToUsersHandler == nil {
+		api.BankPaymentAddToUsersHandler = bank.PaymentAddToUsersHandlerFunc(func(params bank.PaymentAddToUsersParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentAddToUsers has not yet been implemented")
 		})
 	}
 	if api.BankPaymentCancelHandler == nil {

@@ -8,5 +8,5 @@ import (
 
 type BalanceRepository interface {
 	Get(ctx context.Context, userID uint) (*model.Balance, error)
-	AddAllUsers(ctx context.Context, amount, limit, offset int) error
+	AddToUsers(ctx context.Context, amount, limit, offset int) error
 }

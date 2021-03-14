@@ -47,6 +47,7 @@ func (s *balanceService) Get(ctx context.Context, userID uint) (*model.Balance, 
 }
 
 func (s *paymentService) Try(ctx context.Context, uuid string, userID uint, amount int) (*model.PaymentTransaction, *model.Balance, error) {
+	// TODO: 残高が足りるかチェック
 	pt, err := s.PaymentRepo.Try(ctx, uuid, userID, amount)
 	if err != nil {
 		return nil, nil, err
@@ -60,6 +61,7 @@ func (s *paymentService) Try(ctx context.Context, uuid string, userID uint, amou
 }
 
 func (s *paymentService) Confirm(ctx context.Context, uuid string, userID uint, amount int) (*model.PaymentTransaction, *model.Balance, error) {
+	// TODO: 残高が足りるかチェック
 	pt, err := s.PaymentRepo.Get(ctx, uuid)
 	if err != nil {
 		return nil, nil, err

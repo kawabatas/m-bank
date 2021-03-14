@@ -44,6 +44,7 @@ func setHandler(api *operations.BankAPI, app *application) {
 	api.BankGetBalanceHandler = bank.GetBalanceHandlerFunc(func(params bank.GetBalanceParams) middleware.Responder {
 		balance, err := app.BalanceService.Get(ctx, uint(params.UserID))
 		if err != nil {
+			// TODO: 適切なエラーコードを返す
 			return bank.NewGetBalanceDefault(500).WithPayload(toErrorResponse(500, err.Error()))
 		}
 		return bank.NewGetBalanceOK().WithPayload(&models.Balance{UserID: int32(balance.UserID), Amount: int32(balance.Amount)})
@@ -71,8 +72,8 @@ func setHandler(api *operations.BankAPI, app *application) {
 		return bank.NewPaymentCancelOK().WithPayload(toPayResponse(pt, balance))
 	})
 
-	api.BankPaymentAllHandler = bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
-		return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
+	api.BankPaymentAddToUsersHandler = bank.PaymentAddToUsersHandlerFunc(func(params bank.PaymentAddToUsersParams) middleware.Responder {
+		return middleware.NotImplemented("operation bank.PaymentAddToUsers has not yet been implemented")
 	})
 }
 

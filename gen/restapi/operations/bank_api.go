@@ -47,8 +47,8 @@ func NewBankAPI(spec *loads.Document) *BankAPI {
 		BankGetBalanceHandler: bank.GetBalanceHandlerFunc(func(params bank.GetBalanceParams) middleware.Responder {
 			return middleware.NotImplemented("operation bank.GetBalance has not yet been implemented")
 		}),
-		BankPaymentAllHandler: bank.PaymentAllHandlerFunc(func(params bank.PaymentAllParams) middleware.Responder {
-			return middleware.NotImplemented("operation bank.PaymentAll has not yet been implemented")
+		BankPaymentAddToUsersHandler: bank.PaymentAddToUsersHandlerFunc(func(params bank.PaymentAddToUsersParams) middleware.Responder {
+			return middleware.NotImplemented("operation bank.PaymentAddToUsers has not yet been implemented")
 		}),
 		BankPaymentCancelHandler: bank.PaymentCancelHandlerFunc(func(params bank.PaymentCancelParams) middleware.Responder {
 			return middleware.NotImplemented("operation bank.PaymentCancel has not yet been implemented")
@@ -95,8 +95,8 @@ type BankAPI struct {
 
 	// BankGetBalanceHandler sets the operation handler for the get balance operation
 	BankGetBalanceHandler bank.GetBalanceHandler
-	// BankPaymentAllHandler sets the operation handler for the payment all operation
-	BankPaymentAllHandler bank.PaymentAllHandler
+	// BankPaymentAddToUsersHandler sets the operation handler for the payment add to users operation
+	BankPaymentAddToUsersHandler bank.PaymentAddToUsersHandler
 	// BankPaymentCancelHandler sets the operation handler for the payment cancel operation
 	BankPaymentCancelHandler bank.PaymentCancelHandler
 	// BankPaymentConfirmHandler sets the operation handler for the payment confirm operation
@@ -182,8 +182,8 @@ func (o *BankAPI) Validate() error {
 	if o.BankGetBalanceHandler == nil {
 		unregistered = append(unregistered, "bank.GetBalanceHandler")
 	}
-	if o.BankPaymentAllHandler == nil {
-		unregistered = append(unregistered, "bank.PaymentAllHandler")
+	if o.BankPaymentAddToUsersHandler == nil {
+		unregistered = append(unregistered, "bank.PaymentAddToUsersHandler")
 	}
 	if o.BankPaymentCancelHandler == nil {
 		unregistered = append(unregistered, "bank.PaymentCancelHandler")
@@ -289,7 +289,7 @@ func (o *BankAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/payments/all"] = bank.NewPaymentAll(o.context, o.BankPaymentAllHandler)
+	o.handlers["POST"]["/payments/add_to_users"] = bank.NewPaymentAddToUsers(o.context, o.BankPaymentAddToUsersHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}

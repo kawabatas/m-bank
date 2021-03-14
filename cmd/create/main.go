@@ -46,7 +46,7 @@ func createDB(host, user, password, dbname string) error {
 	dsn := database.DSN(host, user, password, "mysql")
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 

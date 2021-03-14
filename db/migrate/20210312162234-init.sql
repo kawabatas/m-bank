@@ -18,7 +18,7 @@ CREATE TABLE `payment_transactions` (
   `user_id` INT(11) UNSIGNED NOT NULL,
   `amount` INT(11) NOT NULL,
   `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `try_time` DATETIME,
+  `try_time` DATETIME NOT NULL,
   `confirm_time` DATETIME,
   `cancel_time` DATETIME,
   PRIMARY KEY (`uuid`),

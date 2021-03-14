@@ -98,11 +98,11 @@ paths:
             $ref: "#/definitions/payRequest"
       tags:
         - Bank
-  /payments/all:
+  /payments/add_to_users:
     post:
-      summary: PaymentAll
+      summary: PaymentAddToUsers
       description: （limit,offsetを指定して）ユーザの残高に一斉に加算する
-      operationId: PaymentAll
+      operationId: PaymentAddToUsers
       responses:
         "200":
           description: A successful response.
@@ -115,7 +115,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/payAllRequest"
+            $ref: "#/definitions/payAddToUsersRequest"
       tags:
         - Bank
 definitions:
@@ -160,7 +160,7 @@ definitions:
         format: date-time
       balance:
         $ref: "#/definitions/balance"
-  payAllRequest:
+  payAddToUsersRequest:
     type: object
     properties:
       amount:

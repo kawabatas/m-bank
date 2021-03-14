@@ -64,21 +64,21 @@ func init() {
         }
       }
     },
-    "/payments/all": {
+    "/payments/add_to_users": {
       "post": {
         "description": "（limit,offsetを指定して）ユーザの残高に一斉に加算する",
         "tags": [
           "Bank"
         ],
-        "summary": "PaymentAll",
-        "operationId": "PaymentAll",
+        "summary": "PaymentAddToUsers",
+        "operationId": "PaymentAddToUsers",
         "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/payAllRequest"
+              "$ref": "#/definitions/payAddToUsersRequest"
             }
           }
         ],
@@ -226,7 +226,7 @@ func init() {
         }
       }
     },
-    "payAllRequest": {
+    "payAddToUsersRequest": {
       "type": "object",
       "required": [
         "amount"
@@ -345,21 +345,21 @@ func init() {
         }
       }
     },
-    "/payments/all": {
+    "/payments/add_to_users": {
       "post": {
         "description": "（limit,offsetを指定して）ユーザの残高に一斉に加算する",
         "tags": [
           "Bank"
         ],
-        "summary": "PaymentAll",
-        "operationId": "PaymentAll",
+        "summary": "PaymentAddToUsers",
+        "operationId": "PaymentAddToUsers",
         "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/payAllRequest"
+              "$ref": "#/definitions/payAddToUsersRequest"
             }
           }
         ],
@@ -507,7 +507,7 @@ func init() {
         }
       }
     },
-    "payAllRequest": {
+    "payAddToUsersRequest": {
       "type": "object",
       "required": [
         "amount"

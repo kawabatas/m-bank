@@ -57,7 +57,7 @@ func (r *PaymentTransactionRepository) Confirm(ctx context.Context, uuid string)
 		return nil, err
 	}
 
-	// 残高の加減算
+	// トランザクション内で、残高不足のチェックおよび加減算を行う
 	beforeBalance, err := findBalance(ctx, tx, pt.UserID)
 	if err != nil {
 		return nil, err

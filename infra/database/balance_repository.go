@@ -20,7 +20,7 @@ func (r *BalanceRepository) Get(ctx context.Context, userID uint) (*model.Balanc
 	return findBalance(ctx, r.DB, userID)
 }
 
-func (r *BalanceRepository) AddAllUsers(ctx context.Context, amount, limit, offset int) error {
+func (r *BalanceRepository) AddToUsers(ctx context.Context, amount, limit, offset int) error {
 	return nil
 }
 
