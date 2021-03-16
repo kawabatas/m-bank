@@ -136,7 +136,7 @@ func (s *paymentService) isEnoughBalance(ctx context.Context, userID uint, amoun
 		return false, err
 	}
 	// 減算後の値が正かどうか
-	if balance.Amount+uint(amount) > 0 {
+	if int(balance.Amount)+amount >= 0 {
 		return true, nil
 	}
 	return false, nil
