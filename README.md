@@ -86,4 +86,4 @@ curl --request POST \
 
 数千数万ユーザずつ、バッチで処理（バッチが状態を保存する）されることを想定した REST API を用意しました。
 
-なお、REST API の詳細ドキュメントは [swagger.yml](https://github.com/kawabatas/m-bank/swagger.yml) をご覧ください。
+なお、REST API の詳細ドキュメントは [swagger.yml](https://github.com/kawabatas/m-bank/blob/main/swagger.yml) をご覧ください。
