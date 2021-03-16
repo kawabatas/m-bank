@@ -13,6 +13,7 @@ cp .envrc-example .envrc
 docker-compose up -d
 
 # データベース作成、初期データ投入
+# (初回は事前に go mod tidy をしておく)
 make create
 ```
 
