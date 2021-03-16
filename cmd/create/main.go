@@ -17,7 +17,7 @@ func main() {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 
-	databases := []string{dbname, database.TestDBName(dbname)}
+	databases := []string{dbname, database.TestDBName()}
 	for _, dbname := range databases {
 		if err := createDB(host, user, password, dbname); err != nil {
 			log.Fatal(err)

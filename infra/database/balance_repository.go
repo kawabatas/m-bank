@@ -92,6 +92,24 @@ func findBalance(ctx context.Context, db dbContext, userID uint) (*model.Balance
 	return rowsToBalance(rows)
 }
 
+func countBalanceLog(ctx context.Context, db dbContext, userID uint) (int, error) {
+	query := `SELECT COUNT(id) FROM balance_logs WHERE user_id = ?`
+	rows, err := db.QueryContext(ctx, query, userID)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		return 0, nil
+	}
+	var count int
+	if err := rows.Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func rowsToBalance(rows *sql.Rows) (*model.Balance, error) {
 	balance := &model.Balance{}
 	if err := rows.Scan(&balance.UserID, &balance.Amount); err != nil {

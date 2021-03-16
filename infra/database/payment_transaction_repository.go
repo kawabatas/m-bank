@@ -49,6 +49,9 @@ func (r *PaymentTransactionRepository) Confirm(ctx context.Context, uuid string)
 	if err != nil {
 		return nil, err
 	}
+	if !pt.IsTryStatus() {
+		return nil, domain.ErrInvalidUUID
+	}
 	pt.ConfirmTime = time.Now()
 	if _, err := tx.ExecContext(ctx,
 		`UPDATE payment_transactions SET confirm_time = ? WHERE uuid = ?`,
@@ -62,17 +65,16 @@ func (r *PaymentTransactionRepository) Confirm(ctx context.Context, uuid string)
 	if err != nil {
 		return nil, err
 	}
-	// 負の数でないことは型で担保
-	afterBalanceAmount := beforeBalance.Amount + uint(pt.Amount)
+	// 残高が負の値でないことはamountの型で担保
 	if _, err := tx.ExecContext(ctx,
-		`UPDATE balances SET amount = ? WHERE user_id = ?`,
-		afterBalanceAmount, pt.UserID,
+		`UPDATE balances SET amount = amount + ? WHERE user_id = ?`,
+		pt.Amount, pt.UserID,
 	); err != nil {
 		return nil, err
 	}
 	if _, err := r.DB.ExecContext(ctx,
 		"INSERT INTO balance_logs (user_id, before_amount, after_amount) VALUES (?, ?, ?)",
-		pt.UserID, beforeBalance.Amount, afterBalanceAmount,
+		pt.UserID, beforeBalance.Amount, beforeBalance.Amount+uint(pt.Amount),
 	); err != nil {
 		return nil, err
 	}
@@ -97,6 +99,9 @@ func (r *PaymentTransactionRepository) Cancel(ctx context.Context, uuid string) 
 	pt, err := findPaymentTransaction(ctx, tx, uuid, true)
 	if err != nil {
 		return nil, err
+	}
+	if !pt.IsTryStatus() {
+		return nil, domain.ErrInvalidUUID
 	}
 	pt.CancelTime = time.Now()
 	if _, err := tx.ExecContext(ctx,

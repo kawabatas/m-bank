@@ -12,7 +12,7 @@ require (
 	github.com/go-openapi/swag v0.19.14
 	github.com/go-openapi/validate v0.20.2
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/google/uuid v1.1.1
+	github.com/google/go-cmp v0.5.2
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/labstack/gommon v0.3.0
 	github.com/rs/cors v1.7.0

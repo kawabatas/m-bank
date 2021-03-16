@@ -14,8 +14,3 @@ func DSN(host, user, password, dbname string) string {
 	// tcp
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true&interpolateParams=true", user, password, host, dbname)
 }
-
-// TestDBName returns test db name.
-func TestDBName(dbname string) string {
-	return fmt.Sprintf("%s_test", dbname)
-}
