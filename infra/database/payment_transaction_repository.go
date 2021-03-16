@@ -29,7 +29,7 @@ func (r *PaymentTransactionRepository) Try(ctx context.Context, uuid string, use
 		pt.UUID, pt.UserID, pt.Amount, pt.TryTime,
 	); err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
-			return nil, domain.ErrDuplicateEntity
+			return nil, domain.ErrDuplicateUUID
 		}
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func findPaymentTransaction(ctx context.Context, db dbContext, uuid string, with
 	defer rows.Close()
 
 	if !rows.Next() {
-		return nil, domain.ErrNoSuchEntity
+		return nil, domain.ErrInvalidUUID
 	}
 	return rowsToPaymentTransaction(rows)
 }
