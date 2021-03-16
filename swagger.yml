@@ -1,0 +1,186 @@
+swagger: "2.0"
+info:
+  title: m-bank
+  version: version not set
+  description: This is the API for m-bank.
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Bank
+paths:
+  "/balances/{userId}":
+    get:
+      summary: GetBalance
+      description: ユーザの残高を取得
+      operationId: GetBalance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/balance"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Bank
+  /payments/try:
+    post:
+      summary: PaymentTry
+      description: 支払い（ユーザの残高の加減算）をTryする
+      operationId: PaymentTry
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  /payments/confirm:
+    post:
+      summary: PaymentConfirm
+      description: 支払い（ユーザの残高の加減算）をConfirmする
+      operationId: PaymentConfirm
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  /payments/cancel:
+    post:
+      summary: PaymentCancel
+      description: 支払い（ユーザの残高の加減算）をCancelする
+      operationId: PaymentCancel
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: "#/definitions/payResponse"
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payRequest"
+      tags:
+        - Bank
+  /payments/add_to_users:
+    post:
+      summary: PaymentAddToUsers
+      description: （limit,offsetを指定して）ユーザの残高に一斉に加算する
+      operationId: PaymentAddToUsers
+      responses:
+        "200":
+          description: A successful response.
+        default:
+          description: An unexpected error response
+          schema:
+            $ref: "#/definitions/errorResponse"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/payAddToUsersRequest"
+      tags:
+        - Bank
+definitions:
+  balance:
+    type: object
+    properties:
+      user_id:
+        type: integer
+        format: int32
+      amount:
+        type: integer
+        format: int32
+  payRequest:
+    type: object
+    properties:
+      idempotency_key:
+        type: string
+        title: 冪等性キー
+      user_id:
+        type: integer
+        format: int32
+      amount:
+        type: integer
+        format: int32
+    required:
+      - idempotency_key
+      - user_id
+  payResponse:
+    type: object
+    properties:
+      idempotency_key:
+        type: string
+        title: 冪等性キー
+      try_time:
+        type: string
+        format: date-time
+      confirm_time:
+        type: string
+        format: date-time
+      cancel_time:
+        type: string
+        format: date-time
+      balance:
+        $ref: "#/definitions/balance"
+  payAddToUsersRequest:
+    type: object
+    properties:
+      amount:
+        type: integer
+        format: int32
+      limit:
+        type: integer
+        format: int32
+      offset:
+        type: integer
+        format: int32
+    required:
+      - amount
+  errorResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        minimum: 100
+        maximum: 600
+      message:
+        type: string

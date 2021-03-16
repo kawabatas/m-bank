@@ -5,9 +5,41 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `users` (`name`) VALUES
-('user1'),
-('user2');
+CREATE TABLE `balances` (
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `payment_transactions` (
+  `uuid` VARCHAR(255) NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `amount` INT(11) NOT NULL,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `try_time` DATETIME NOT NULL,
+  `confirm_time` DATETIME,
+  `cancel_time` DATETIME,
+  PRIMARY KEY (`uuid`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `balance_logs` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) UNSIGNED NOT NULL,
+  `before_amount` INT(11) UNSIGNED NOT NULL,
+  `after_amount` INT(11) UNSIGNED NOT NULL,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `users` (`id`, `name`) VALUES (1, 'user1'), (2, 'user2');
+INSERT INTO `balances` (`user_id`, `amount`) VALUES (1, 100), (2, 200);
 
 -- +migrate Down
+DROP TABLE IF EXISTS `balance_logs`;
+DROP TABLE IF EXISTS `payment_transactions`;
+DROP TABLE IF EXISTS `balances`;
 DROP TABLE IF EXISTS `users`;

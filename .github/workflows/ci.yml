@@ -1,0 +1,33 @@
+name: ci
+on:
+  pull_request:
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1:3306
+      DB_NAME: dbname
+      DB_USER: root
+      DB_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "1.16.x"
+          stable: 'true'
+      - name: Start mysql
+        run: sudo /etc/init.d/mysql start
+      - name: Prepare test
+        run: make create
+      - name: Run test
+        run: make test

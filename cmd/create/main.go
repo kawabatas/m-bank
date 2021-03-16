@@ -17,7 +17,7 @@ func main() {
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 
-	databases := []string{dbname, database.TestDBName(dbname)}
+	databases := []string{dbname, database.TestDBName()}
 	for _, dbname := range databases {
 		if err := createDB(host, user, password, dbname); err != nil {
 			log.Fatal(err)
@@ -46,7 +46,7 @@ func createDB(host, user, password, dbname string) error {
 	dsn := database.DSN(host, user, password, "mysql")
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
